@@ -1,0 +1,10 @@
+{
+    "feedbackExists": "Siz allaqachon baho berib bo'lgansiz!",
+    "error": "Nimadir xato ketdi, /start - qayta urunib ko'ring",
+    "invalidInput": "Xato javob!, Iltimos tugmalardan foydalaning.",
+    "wasRude": "Vrach sizga qo'pol munosabatda bo'ldimi?",
+    "askSentToPrivateClinic": "Vrach sizni shaxsiy klinikasiga yubordimi?",
+    "serviceQuality": "Sizga xizmat ko'rsatgan vrachni ish faoliyatini baholang:",
+    "doctorName": "Sizga xizmat ko'rsatgan vrach ism familiyasini yozib qoldiring",
+    "thanks": "Bizga yordam berganingizdan xursandmiz."
+}
