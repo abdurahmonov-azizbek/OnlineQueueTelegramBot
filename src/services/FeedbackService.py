@@ -1,5 +1,6 @@
 import db
 from models.feedback import Feedback
+from config import ORGANIZATION_ID
 
 async def get_all_feedbacks():
     conn = await db.get_db_connection()
@@ -11,6 +12,9 @@ async def get_all_feedbacks():
             Feedback(
                 Id = row['id'],
                 TelegramId = row['telegram_id'],
+                FirstName = row['first_name'],
+                LastName = row['last_name'],
+                PhoneNumber = row['phone_number'],
                 WasRude = row['was_rude'],
                 SentToPrivateClinic = row['sent_to_private_clinic'],
                 ServiceQuality = row['service_quality'],
@@ -39,6 +43,9 @@ async def get_feedback_by_id(id: int):
         return Feedback(
             Id=row['id'],
             TelegramId=row['telegram_id'],
+            FirstName=row['first_name'],
+            LastName=row['last_name'],
+            PhoneNumber=row['phone_number'],
             WasRude=row['was_rude'],
             SentToPrivateClinic=row['sent_to_private_clinic'],
             ServiceQuality=row['service_quality'],
@@ -63,6 +70,9 @@ async def get_feedback_by_telegram_id(id: int):
         return Feedback(
             Id=row['id'],
             TelegramId=row['telegram_id'],
+            FirstName=row['first_name'],
+            LastName=row['last_name'],
+            PhoneNumber=row['phone_number'],
             WasRude=row['was_rude'],
             SentToPrivateClinic=row['sent_to_private_clinic'],
             ServiceQuality=row['service_quality'],
@@ -76,16 +86,20 @@ async def get_feedback_by_telegram_id(id: int):
 
 async def create_feedback(data: dict):
     conn = await db.get_db_connection()
-    query = "INSERT INTO info_feedback(telegram_id, was_rude, sent_to_private_clinic, service_quality, doctor_name) VALUES ($1, $2, $3, $4, $5)"
+    query = "INSERT INTO info_feedback(telegram_id, first_name, last_name, phone_number, was_rude, sent_to_private_clinic, service_quality, doctor_name, organization_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 
     try:
         await conn.execute(
             query,
             data['TelegramId'],
+            data['FirstName'],
+            data['LastName'],
+            data['PhoneNumber'],
             data['WasRude'],
             data['SentToPrivateClinic'],
             data['ServiceQuality'],
-            data['DoctorName']
+            data['DoctorName'],
+            ORGANIZATION_ID
         )
     except Exception as ex:
         print(f"[!] Eror with creating feedback: {ex}")

@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 DB_CONFIG = {
@@ -11,3 +11,5 @@ DB_CONFIG = {
     "host": os.getenv("DB_HOST"),
     "port": int(os.getenv("DB_PORT"))
 }
+
+ORGANIZATION_ID = int(os.getenv("ORGANIZATION_ID"))

@@ -6,5 +6,6 @@
     "askSentToPrivateClinic": "Vrach sizni shaxsiy klinikasiga yubordimi?",
     "serviceQuality": "Sizga xizmat ko'rsatgan vrachni ish faoliyatini baholang:",
     "doctorName": "Sizga xizmat ko'rsatgan vrach ism familiyasini yozib qoldiring",
-    "thanks": "Bizga yordam berganingizdan xursandmiz."
+    "thanks": "Bizga yordam berganingizdan xursandmiz.",
+    "askPhone": "Telefon raqamingizni yuboring"
 }
