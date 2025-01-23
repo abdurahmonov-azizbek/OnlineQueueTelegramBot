@@ -13,7 +13,7 @@ class CreateFeedback(StatesGroup):
     PhoneNumber = State()
     WasRude = State()
     SentToPrivateClinic = State()
-    ServiceQuality = State()
+    Quality = State()
     DoctorName = State()
 
 @router.message(lambda c: c.text == "Оценка⭐️" or c.text == "Baxolash⭐️")
@@ -46,13 +46,14 @@ async def ask_phone(message: types.Message, state: FSMContext):
 @router.message(CreateFeedback.PhoneNumber)
 async def start_grade(message: types.Message, state: FSMContext):
     try:
-        if(message.contact is None):
-            await message.answer(messages['invalidInput'])
-            return
-        
         user_id = message.from_user.id
         userSettings = await UserSettingsService.get_by_telegram_id(user_id)
         messages = load_language("uz" if userSettings.LanguageId == 1 else "ru")
+        
+        if message.contact is None:
+            await message.answer(messages['invalidInput'])
+            return
+        
         await state.update_data(PhoneNumber=message.contact.phone_number)
         await state.set_state(CreateFeedback.WasRude)
         
@@ -88,13 +89,13 @@ async def ask_ServiceQuality(message: types.Message, state: FSMContext):
         messages = load_language("uz" if userSettings.LanguageId == 1 else "ru")
         userInput = message.text.lower()
         await state.update_data(SentToPrivateClinic=(userInput == "ha" or userInput == "да"))
-        await state.set_state(CreateFeedback.ServiceQuality)
+        await state.set_state(CreateFeedback.Quality)
         await message.answer(messages['serviceQuality'], reply_markup=keyboards.getQualityKeyboards(userSettings.LanguageId))
     except Exception as e:
         print(f"Error in ask_ServiceQuality: {e}")
         await message.answer(messages["error"], reply_markup=types.ReplyKeyboardRemove())
 
-@router.message(CreateFeedback.ServiceQuality)
+@router.message(CreateFeedback.Quality)
 async def ask_DoctorName(message: types.Message, state: FSMContext):
     try:
         user_id = message.from_user.id
@@ -107,11 +108,11 @@ async def ask_DoctorName(message: types.Message, state: FSMContext):
             return
 
         if userInput == "yaxshi" or userInput == "хорошо":
-            await state.update_data(ServiceQuality=3)
+            await state.update_data(Quality=3)
         elif userInput == "yomon" or userInput == "плохо":
-            await state.update_data(ServiceQuality=2)
+            await state.update_data(Quality=2)
         else:
-            await state.update_data(ServiceQuality=1)
+            await state.update_data(Quality=1)
             
         await state.set_state(CreateFeedback.DoctorName)
         await message.answer(messages['doctorName'], reply_markup=types.ReplyKeyboardRemove())

@@ -17,7 +17,7 @@ async def get_all_feedbacks():
                 PhoneNumber = row['phone_number'],
                 WasRude = row['was_rude'],
                 SentToPrivateClinic = row['sent_to_private_clinic'],
-                ServiceQuality = row['service_quality'],
+                Quality = row['quality_id'],
                 DoctorName = row['doctor_name']
             )
             for row in rows
@@ -48,7 +48,7 @@ async def get_feedback_by_id(id: int):
             PhoneNumber=row['phone_number'],
             WasRude=row['was_rude'],
             SentToPrivateClinic=row['sent_to_private_clinic'],
-            ServiceQuality=row['service_quality'],
+            Quality=row['quality_id'],
             DoctorName=row['doctor_name']
         )
     except Exception as ex:
@@ -59,10 +59,10 @@ async def get_feedback_by_id(id: int):
 
 async def get_feedback_by_telegram_id(id: int):
     conn = await db.get_db_connection()
-    query = "SELECT * FROM info_feedback WHERE telegram_id = $1"
+    query = f"SELECT * FROM info_feedback WHERE telegram_id = {id}"
 
     try:
-        row = await conn.fetchrow(query, id)
+        row = await conn.fetchrow(query)
         if not row:
             print(f"[!] No feedback found with id: {id}")
             return None
@@ -75,7 +75,7 @@ async def get_feedback_by_telegram_id(id: int):
             PhoneNumber=row['phone_number'],
             WasRude=row['was_rude'],
             SentToPrivateClinic=row['sent_to_private_clinic'],
-            ServiceQuality=row['service_quality'],
+            Quality=row['quality_id'],
             DoctorName=row['doctor_name']
         )
     except Exception as ex:
@@ -86,7 +86,7 @@ async def get_feedback_by_telegram_id(id: int):
 
 async def create_feedback(data: dict):
     conn = await db.get_db_connection()
-    query = "INSERT INTO info_feedback(telegram_id, first_name, last_name, phone_number, was_rude, sent_to_private_clinic, service_quality, doctor_name, organization_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+    query = "INSERT INTO info_feedback(telegram_id, first_name, last_name, phone_number, was_rude, sent_to_private_clinic, quality_id, doctor_name, organization_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
 
     try:
         await conn.execute(
@@ -97,7 +97,7 @@ async def create_feedback(data: dict):
             data['PhoneNumber'],
             data['WasRude'],
             data['SentToPrivateClinic'],
-            data['ServiceQuality'],
+            data['Quality'],
             data['DoctorName'],
             ORGANIZATION_ID
         )
