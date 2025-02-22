@@ -24,8 +24,9 @@ async def ask_phone(message: types.Message, state: FSMContext):
         messages = load_language("uz" if userSettings.LanguageId == 1 else "ru")
         feedback = await FeedbackService.get_feedback_by_telegram_id(user_id)
         if feedback:
-            await message.answer(messages["feedbackExists"], reply_markup=keyboards.getMenuKeyboards(userSettings.LanguageId))
-            return
+            if is_feedback_created_today(user_id):
+                await message.answer(messages["feedbackExists"], reply_markup=keyboards.getMenuKeyboards(userSettings.LanguageId))
+                return
 
         button_text = "Telefon raqam yuborish☎️" if userSettings.LanguageId == 1 else "Отправить номер телефона☎️"
         button = KeyboardButton(text=button_text, request_contact=True)
